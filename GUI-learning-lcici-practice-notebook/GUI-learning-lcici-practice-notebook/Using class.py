@@ -1,3 +1,4 @@
+
 import tkinter as tk
 from tkinter import ttk
 from tkinter import scrolledtext
@@ -51,11 +52,38 @@ class OOP():
        self.window.title("MY GUI")
        self.window.iconbitmap('@/home/chang/Documents/Python text/Chipicon.xbm')
         
-       self.createWidgets()
-       
+       self.createWidgets()  
+      
        #Button definition
-    def clickButton(self):
+    def _clickButton(self):
        self.action.configure(text = 'Input is ' + self.input.get())
+      
+       #Spinbox callback
+    def _spin(self):
+       value = self.spin.get()
+       print(value)
+       self.scr.insert(tk.INSERT, value +'\n')
+       
+       #Radiobutton callback
+    def radCall(self):
+       self.radSel=self.radVar.get()
+       if self.radSel == 0: self.checkbox.configure (text = 'Blue')
+       elif self.radSel == 1: self.checkbox.configure (text = 'Gold')
+       elif self.radSel == 2: self.checkbox.configure(text = 'Red')
+       
+    #Menubar callback
+    def _quit(self):
+       self.window.quit()
+       self.window.destroy()
+       exit()
+       
+    #Menubar About Info Callback function
+    def _msgBox(self):
+       self.mBox.showinfo('Python Message Info Box', 'My GUI created in 2016.')
+       self.mBox.showwarning('Warning Box', 'Wrong Input')
+       self.answer= self.mBox.askyesno('Choice Box', 'Do you want to proceed?')
+       print(self.answer)
+             
 
     #Adding tabs  
     def createWidgets(self):
@@ -66,16 +94,16 @@ class OOP():
 
        tab2= ttk.Frame(tabControl)
        tabControl.add(tab2, text= 'Tab 2')
+       tabControl.pack(expand=1, fill ="both")
 
-#       tabControl.add(tab3,text='Tab 3')
-
-#       tabControl.pack(expand=1, fill ="both")
- #      tab3 = tk.Frame(tab3, bg = 'blue')
- #      tab3.pack()
- #      for orangeColor in range(2):
- #          canvas = tk.Canvas(tab3, width =150, height =80, highlightthickness =0, bg = 'orange')
- #          canvas.grid(row=orangeColor, column= orangeColor)
- #      
+       tab3=tk.Frame(tabControl, bg = 'blue')
+       tabControl.add(tab3,text='Tab 3')
+       tabControl.pack(expand=1, fill ="both")
+      
+       for orangeColor in range(2):
+           self.canvas = tk.Canvas(tab3, width =160, height =80, highlightthickness =0, bg = 'orange')
+           self.canvas.grid(row=orangeColor, column= orangeColor)
+       
    
      #Adding label frames
        self.enterbox = ttk.LabelFrame(tab1, text = 'Enter Box')
@@ -87,131 +115,103 @@ class OOP():
 
     #Adding a textbox
        self.input = tk.StringVar()
-       inputEntered = ttk.Entry(self.enterbox, width=12, textvariable = self.input)
-       inputEntered.grid(column =0, row=1)
-       inputEntered.focus()
+       self.inputEntered = ttk.Entry(self.enterbox, width=12, textvariable = self.input)
+       self.inputEntered.grid(column =0, row=1)
+       self.inputEntered.focus()
 
     #Adding drop-down box
-       number=tk.StringVar();
-       numberChosen = ttk.Combobox(self.enterbox, width=12, textvariable =number)
-       numberChosen['values'] = (1,2,3, 5.5, 100.7)
-       numberChosen.grid(column = 1, row =1)
-       numberChosen.current(0)
-
-
+       self.number=tk.StringVar();
+       self.numberChosen = ttk.Combobox(self.enterbox, width=12, textvariable =self.number)
+       self.numberChosen['values'] = (1,2,3, 5.5, 100.7)
+       self.numberChosen.grid(column = 1, row =1)
+       self.numberChosen.current(0)
 
        
 #Adding a button
-       action = ttk.Button(self.enterbox, text = "Send", command = self.clickButton)
-       action.grid(column=2, row=1)
-
-
-#Adding spinbox
-    def _spin(self):
-       value = self.spin.get()
-       print(value)
-       self.scr.insert(tk.INSERT, value +'\n')
+       self.action = ttk.Button(self.enterbox, text = "Send", command = self._clickButton)
+       self.action.grid(column=2, row=1)
        
+#Adding label frames
+       self.checkbox = ttk.LabelFrame(tab2, text = 'Check Box')
+       self.checkbox.grid(column=0, row=0, padx=8, pady=4)
+       
+#Adding checkbutton
+       self.chVarDis = tk.IntVar()
+       self.check1 = tk.Checkbutton (self.checkbox, text = "Disabled", variable = self.chVarDis, state = 'disabled')
+       self.check1.select()
+       self.check1.grid(column =0, row=4, sticky = tk.W)
+
+       self.chVarUn = tk.IntVar()
+       self.check2 =tk.Checkbutton(self.checkbox, text = "UnChecked", variable = self.chVarUn)
+       self.check2.deselect()
+       self.check2.grid(column=1, row=4, sticky = tk.W)
+
+       self.chVarEn = tk.IntVar()
+       self.check3 = tk.Checkbutton(self.checkbox, text = "Enabled", variable = self.chVarEn)
+       self.check3.select()
+       self.check3.grid(column=2, row=4, sticky =tk.W)
+       
+#Adding label frame
+       self.labelsFrame = ttk.LabelFrame(tab2, text = "Labels Frame ")
+       self.labelsFrame.grid(column=0, row=7, padx=8, pady=4)
+
+       ttk.Label(self.labelsFrame, text= "Label1").grid(column=0, row=0)
+       ttk.Label(self.labelsFrame, text= "Label2").grid(column=1, row=0)
+       ttk.Label(self.labelsFrame, text= "Label3").grid(column=2, row=0)
+       ttk.Label(self.labelsFrame, text= "Label4").grid(column=0, row=1)
+
+       for self.child in self.labelsFrame.winfo_children():
+           self.child.grid_configure(padx=5, pady=5)
+           
+#Adding scrolled Text 
+       scrolW = 30
+       scrolH = 3
+       self.scr = scrolledtext. ScrolledText(self.enterbox, width= scrolW, height=scrolH, wrap = tk.WORD)
+       self.scr.grid(column=0, row =3, sticky = 'WE', columnspan =3)
+
+       createToolTip(self.scr,'This is a ScrolledText widget')     
+
+
+#Adding spinbox,action atrributed in createWidgets
        self.spin = Spinbox(self.enterbox, from_=0, to=10, width=5, command=self._spin)
        self.spin.grid(column=0, row=2)
 
        self.spin1 = Spinbox(self.enterbox, values = (1,2,5,8,10),width=5,bd=8)
        self.spin1.grid(column=1, row=2)
-
+    
 #Add a Tooltip to the Spinbox
        createToolTip(self.spin,'This is a Spin Contorl')
-
-#Adding scrolled Text 
-       scrolW = 30
-       scrolH = 3
-       self.scr = scrolledtext. ScrolledText(self.enterbox, width= scrolW, height=scrolH, wrap = tk.WORD)
-       self.scr.grid(column=0, sticky = 'WE', columnspan =3)
-
-       createToolTip(self.scr,'This is a ScrolledText widget')
-
        
-##Adding label frames
-#       self.checkbox = ttk.LabelFrame(tab2, text = 'Check Box')
-#    self.checkbox.grid(column=0, row=0, padx=8, pady=4)
-#
-##Adding checkbutton
-#
-#chVarDis = tk.IntVar()
-#check1 = tk.Checkbutton (checkbox, text = "Disabled", variable = chVarDis, state = 'disabled')
-#check1.select()
-#check1.grid(column =0, row=4, sticky = tk.W)
-#
-#chVarUn = tk.IntVar()
-#check2 =tk.Checkbutton(checkbox, text = "UnChecked", variable = chVarUn)
-#check2.deselect()
-#check2.grid(column=1, row=4, sticky = tk.W)
-#
-#chVarEn = tk.IntVar()
-#check3 = tk.Checkbutton(checkbox, text = "Enabled", variable = chVarEn)
-#check3.select()
-#check3.grid(column=2, row=4, sticky =tk.W)
-#
-##Radiobutton Definition
-#colors = ["Blue", "Gold", "Red"]
-#
-#
-###Radiobutton 
-#def radCall():
-#    radSel=radVar.get()
-#    if radSel == 0: checkbox.configure (text = 'Blue')
-#    elif radSel == 1: checkbox.configure (text = 'Gold')
-#    elif radSel == 2: checkbox.configure(text = 'Red')
-#    
-##Adding Radiobuttons
-#radVar = tk.IntVar()
-#
-#radVar.set(99)  #set the default value outside the range of options
-#
-#for col in range(3) :
-#    radcol = 'rad' + str(col)
-#    radcol = tk.Radiobutton (checkbox, text = colors[col], variable = radVar, value
-#                          = col, command = radCall)
-#    radcol.grid(column= col, row =5, sticky = tk.W)
-#    
-##Adding label frame
-#labelsFrame = ttk.LabelFrame(tab2, text = "Labels Frame ")
-#labelsFrame.grid(column=0, row=7, padx=8, pady=4)
-#
-#ttk.Label(labelsFrame, text= "Label1").grid(column=0, row=0)
-#ttk.Label(labelsFrame, text= "Label2").grid(column=1, row=0)
-#ttk.Label(labelsFrame, text= "Label3").grid(column=2, row=0)
-#ttk.Label(labelsFrame, text= "Label4").grid(column=0, row=1)
-#
-#for child in labelsFrame.winfo_children():
-#  child.grid_configure(padx=5, pady=5)
-#
-##Adding Menu bar
-#def _quit():
-#    window.quit()
-#    window.destroy()
-#    exit()
-#    
-#menuBar = Menu (window)
-#window.config(menu = menuBar)
-#
-#fileMenu = Menu(menuBar,tearoff = 0)  
-#fileMenu.add_command(label="New")
-#fileMenu.add_separator()
-#fileMenu.add_command(label="Exit", command=_quit)
-#menuBar.add_cascade(label = "File", menu=fileMenu)
-#
-##Display a Message Box
-##Callback function
-#def _msgBox():
-##   mBox.showinfo('Python Message Info Box', 'My GUI created in 2016.')
-##   mBox.showwarning('Warning Box', 'Wrong Input')
-##   mBox.showerror('Error Box', 'Error Input')
-#    answer= mBox.askyesno('Choice Box', 'Do you want to proceed?')
-#    print(answer)
-#    
-#helpMenu = Menu(menuBar,tearoff = 0)
-#helpMenu.add_command(label = "About",command=_msgBox)
-#menuBar.add_cascade (label = "Help", menu=helpMenu)
+
+#Radiobutton Definition
+       self.colors = ["Blue", "Gold", "Red"]
+    
+#Adding Radiobuttons
+       self.radVar = tk.IntVar()
+       
+       self.radVar.set(99)  #set the default value outside the range of options
+
+       for col in range(3) :
+           self.radcol = 'rad' + str(col)
+           self.radcol = tk.Radiobutton (self.checkbox, text = self.colors[col], variable = self.radVar, value
+                          = col, command = self.radCall)
+           self.radcol.grid(column= col, row =5, sticky = tk.W)  
+
+#Adding Menu bar     
+       self.menuBar = Menu (self.window)
+       self.window.config(menu = self.menuBar)
+       self.fileMenu = Menu(self.menuBar,tearoff = 0)  
+       self.fileMenu.add_command(label="New")
+       self.fileMenu.add_separator()
+       self.fileMenu.add_command(label="Exit", command=self._quit)
+       self.menuBar.add_cascade(label = "File", menu=self.fileMenu)
+
+#Display a Message Box
+
+    
+       self.helpMenu = Menu(self.menuBar,tearoff = 0)
+       self.helpMenu.add_command(label = "About",command=self._msgBox)
+       self.menuBar.add_cascade (label = "Help", menu=self.helpMenu)
 
 oop = OOP()
 oop.window.mainloop()
